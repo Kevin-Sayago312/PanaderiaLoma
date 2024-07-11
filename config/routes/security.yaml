@@ -1,0 +1,31 @@
+_security_logout:
+    resource: security.route_loader.logout
+    type: service
+registrar_usuario:
+    path: /registrar-usuario
+    controller: App\Controller\LoginController::registrarUsuario
+    methods: [POST]
+registrar_producto:
+    path: /registrar-producto
+    controller: App\Controller\AddCategoriasController::registrarProducto
+    methods: [POST]
+eliminar_producto:
+    path: /eliminar-producto
+    controller: App\Controller\AddCategoriasController::eliminarProducto
+    methods: [POST]
+editar_producto:
+    path: /editar-producto
+    controller: App\Controller\AddCategoriasController::editarProducto
+    methods: [POST] 
+registrar_categoria:
+    path: /registrar-categoria
+    controller: App\Controller\AddProductosController::registrarCategoria
+    methods: [POST]
+eliminar_categoria:
+    path: /eliminar-categoria
+    controller: App\Controller\AddProductosController::eliminarcategoria
+    methods: [POST]
+editar_categoria:
+    path: /editar-categoria
+    controller: App\Controller\AddProductosController::editarCategoria
+    methods: [POST] 

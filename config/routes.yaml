@@ -1,0 +1,20 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+    
+app_shop_by_category:
+    path: /shop/{id}
+    controller: App\Controller\ShopController::showByCategory
+
+app_index:
+    path: /
+    controller: App\Controller\IndexController::index
+
+app_register:
+    path: /register
+    controller: App\Controller\RegisterController::register

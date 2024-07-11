@@ -1,0 +1,224 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{parent()}} - Tienda {% endblock %}
+
+{% block body %}
+	{{parent()}}
+
+<!-- EMPIEZA DE PAGINADOR -->
+<div class="product-section mt-150 mb-100">
+    <div class="container">
+        <!-- Mostrar productos paginados -->
+        <div class="row product-lists">
+            {% for producto in productos %}
+                <div class="col-lg-4 col-md-6 text-center strawberry">
+                    <div class="single-product-item">
+                        <div class="product-image">
+                            <a href="{{ path('app_producto') }}">
+                                <img src="{{ asset('uploads/files/' ~ producto.photo) }}" alt="{{ producto.nombre }}">
+                            </a>
+                        </div>
+                        <div class="product-details">
+                            <span>Categoria: {{ producto.categorias.categoria }}</span>
+                            <h3>{{ producto.nombre }}</h3>
+                            <p class="product-price"><span>{{ producto.descripcion }}</span> ${{ producto.precio }}</p>
+                            <!-- Añadir al carrito -->
+                            <a href="#" class="cart-btn add-to-cart" data-product-id="{{ producto.id }}" data-cantidad="1">
+                                <i class="fas fa-shopping-cart icon"></i> Añadir al carrito
+                            </a>
+                        </div>
+
+                        <!-- Formulario oculto -->
+                        <form id="add-to-cart-form" method="POST" action="{{ path('app_cart_add') }}" style="display: none;">
+                            <input type="hidden" name="producto_id" id="add-to-cart-product-id">
+                            <input type="hidden" name="cantidad" id="add-to-cart-cantidad">
+                        </form>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                document.querySelectorAll('.add-to-cart').forEach(function (link) {
+                                    link.addEventListener('click', function (event) {
+                                        event.preventDefault();
+                                        var productId = this.dataset.productId;
+                                        var cantidad = this.dataset.cantidad;
+
+                                        var form = document.getElementById('add-to-cart-form');
+                                        document.getElementById('add-to-cart-product-id').value = productId;
+                                        document.getElementById('add-to-cart-cantidad').value = cantidad;
+                                        form.submit();
+                                    });
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginación -->
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <ul class="pagination justify-content-center">
+                    {{ knp_pagination_render(productos) }}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- FIN DE PAGINADOR -->
+
+
+<style>
+    /* Estilos para la sección de productos */
+    .product-section {
+        background-color: #f9f9f9;
+        padding: 50px 0;
+    }
+
+    .product-lists {
+        margin-top: 30px;
+    }
+
+    .single-product-item {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+        position: relative;
+    }
+
+    .single-product-item:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #fda403, #f57c00);
+        z-index: -1;
+        opacity: 0.8;
+        border-radius: 10px;
+        transition: opacity 0.3s ease;
+    }
+
+    .single-product-item:hover:before {
+        opacity: 1;
+    }
+
+    .product-image {
+        margin-bottom: 15px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+    .product-image img {
+        max-width: 100%;
+        height: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .product-image img:hover {
+        transform: scale(1.1);
+    }
+
+    .product-image a {
+        display: block;
+    }
+
+    .product-details {
+        padding: 10px 0;
+    }
+
+    .product-details span {
+        font-size: 14px;
+        color: #999;
+        text-transform: uppercase;
+    }
+
+    .product-details h3 {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .product-details p {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .cart-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cart-btn:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%) rotate(45deg);
+        z-index: 0;
+        transition: width 0.3s ease, height 0.3s ease;
+    }
+
+    .cart-btn:hover:before {
+        width: 0;
+        height: 0;
+    }
+
+    .cart-btn .icon {
+        position: relative;
+        z-index: 1;
+    }
+
+    .cart-btn:hover {
+        background-color: #555;
+    }
+
+    /* Estilos para la paginación */
+    .pagination {
+        margin-top: 30px;
+    }
+
+    .pagination .page-item .page-link {
+        background-color: #333;
+        color: #fff;
+        border-color: #333;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .pagination .page-item .page-link:hover {
+        background-color: #555;
+        border-color: #555;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #555;
+        border-color: #555;
+    }
+</style>
+
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{parent()}} - Nosotros {% endblock %}
+
+{% block body %}
+	{{parent()}}
+
+<style>
+    /* Estilos para la sección Nosotros somos */
+    .abt-section {
+        background: linear-gradient(to right, #ff9966, #ff5e62); /* Degradado de colores */
+        color: #fff; /* Color de texto */
+        padding: 80px 0; /* Espaciado interno */
+    }
+
+    .abt-text h2 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .abt-text p {
+        font-size: 18px;
+        line-height: 1.8;
+        color: #f0f0f0; /* Color de texto secundario */
+    }
+
+    /* Estilos para la sección del equipo */
+    .team-section {
+        background-color: #333; /* Color de fondo */
+        padding: 100px 0; /* Espaciado interno */
+    }
+
+    .team-section .section-title {
+        margin-bottom: 50px; /* Espaciado inferior */
+    }
+
+    .team-section .single-team-item {
+        background-color: #fff; /* Color de fondo */
+        padding: 30px;
+        border-radius: 10px; /* Bordes redondeados */
+        margin-bottom: 30px; /* Espaciado inferior */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Sombra */
+        transition: transform 0.3s ease-in-out; /* Animación al pasar el mouse */
+    }
+
+    .team-section .single-team-item:hover {
+        transform: translateY(-5px); /* Efecto de levantamiento al pasar el mouse */
+    }
+
+    .team-section h4 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333; /* Color de texto principal */
+    }
+
+    .team-section span {
+        font-size: 18px;
+        color: #666; /* Color de texto secundario */
+    }
+</style>
+
+<!-- EMPIEZA SECCION DEL VIDEO Y QUIENES SOMOS-->
+<div class="abt-section mb-150 mt-150">
+    <div class="container">
+        <div class="row">
+            <div class="text-center">
+                <div class="abt-text">
+                    <h2>Nosotros somos <span class="orange-text">Panadería Loma</span></h2>
+                    <p>En Panadería Loma nos especializamos en la elaboración artesanal de panes y productos horneados, con una pasión arraigada por la calidad y el sabor auténtico. Desde nuestros inicios, nos comprometemos a ofrecer a nuestros clientes lo mejor en cada bocado, utilizando ingredientes frescos y naturales para crear delicias que deleiten los sentidos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TERMINA SECCION DEL VIDEO Y QUIENES SOMOS-->
+
+<!-- EMPIEZA SECCION DEL EQUIPO -->
+<div class="team-section mt-150">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="section-title">
+                    <h4 style="color: #fff;">Creadores de la <span class="orange-text" >Aplicación Web</span></h4>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="single-team-item text-center">
+                    <h4>Edgar Bravo Peña <span>FullStack</span></h4>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="single-team-item text-center">
+                    <h4>Williams Sierra Rodriguez <span>Backend</span></h4>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0">
+                <div class="single-team-item text-center">
+                    <h4>Daniel de Jesús Lara Mora <span>Frontend</span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TERMINA SECCION DEL EQUIPO -->
+
+
+{% endblock %}

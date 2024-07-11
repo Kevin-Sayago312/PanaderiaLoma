@@ -1,0 +1,295 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} - Carrito {% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+<!-- Estilos CSS para la sección del carrito -->
+<style>
+    /* Estilos para la sección del carrito */
+    .cart-section {
+        background: linear-gradient(to bottom right, #f9f9f9, #eaeaea);
+        padding: 50px 0;
+    }
+
+    .cart-table-wrap {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-table {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .cart-table th,
+    .cart-table td {
+        text-align: center;
+        vertical-align: middle !important;
+        font-size: 14px;
+    }
+
+    .cart-table th.product-remove,
+    .cart-table td.product-remove {
+        width: 20%;
+    }
+
+    .cart-table th.product-image,
+    .cart-table td.product-image {
+        width: 15%;
+    }
+
+    .cart-table th.product-name,
+    .cart-table td.product-name {
+        width: 25%;
+    }
+
+    .cart-table th.product-price,
+    .cart-table td.product-price,
+    .cart-table th.product-quantity,
+    .cart-table td.product-quantity,
+    .cart-table th.product-subtotal,
+    .cart-table td.product-subtotal {
+        width: 10%;
+    }
+
+    .cart-table .product-image img {
+        max-width: 80px;
+        max-height: 80px;
+        border-radius: 5px;
+    }
+
+    .cart-buttons {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .total-section {
+        background-color: #fff;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .total-table {
+        width: 100%;
+    }
+
+    .total-table th,
+    .total-table td {
+        text-align: center;
+        vertical-align: middle !important;
+        font-size: 14px;
+    }
+
+    .total-data {
+        background-color: #f1f1f1;
+    }
+
+    .total-data td {
+        padding: 10px;
+    }
+
+    .total-data .font-weight-bold {
+        font-size: 18px;
+    }
+
+    .cart-buttons .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .cart-buttons .btn-success {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: #fff;
+    }
+
+    .cart-buttons .btn-success:hover {
+        background-color: #45a049;
+        border-color: #45a049;
+    }
+
+    .edit-button {
+        margin-top: 10px;
+    }
+
+    /* Estilos para el modal de edición */
+    .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        background-color: #4CAF50;
+        color: #fff;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .modal-footer .btn-primary {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+    }
+
+    .modal-footer .btn-primary:hover {
+        background-color: #45a049;
+        border-color: #45a049;
+    }
+</style>
+
+<!-- Contenido HTML de la sección del carrito -->
+<div class="cart-section mt-150 mb-150">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="cart-table-wrap bg-white p-4 rounded shadow-sm">
+                    <table class="cart-table table table-bordered table-hover">
+                        <thead class="thead-light">
+                            <tr class="table-head-row">
+                                <th class="product-remove">Acciones</th>
+                                <th class="product-image">Imagen del producto</th>
+                                <th class="product-name">Nombre</th>
+                                <th class="product-price">Precio</th>
+                                <th class="product-quantity">Cantidad</th>
+                                <th class="product-subtotal">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-body">
+                            {% for carrito in carritos %}
+                                {% if carrito.user == app.user %}
+                                    <tr class="table-body-row" data-product-id="{{ carrito.productos.id }}">
+                                        <td class="product-remove">
+                                            <form method="POST" action="{{ path('app_cart_eliminar', {'id': carrito.id}) }}" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este carrito?');">
+                                                <input type="hidden" name="_method" value="POST">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ carrito.id) }}">
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                                </button>
+                                            </form>
+                                            <button type="button" class="btn btn-warning btn-sm mt-2 edit-button" data-toggle="modal" data-target="#cantidadeditar{{ carrito.id }}" data-id="{{ carrito.id }}" data-cantidad="{{ carrito.cantidad }}">
+                                                <i class="fas fa-edit"></i> Editar cantidad
+                                            </button>
+
+                                            <!-- Modal para editar cantidad -->
+                                            <div class="modal fade" id="cantidadeditar{{ carrito.id }}" tabindex="-1" role="dialog" aria-labelledby="cantidadeditarLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-success text-white">
+                                                            <h5 class="modal-title" id="cantidadeditarLabel">Editar cantidad</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- Formulario -->
+                                                            <form id="cantidadFormEdit{{ carrito.id }}" method="post">
+                                                                <input type="hidden" id="carritoId" name="id" value="{{ carrito.id }}">
+                                                                <div class="form-group">
+                                                                    <label for="cantidad">Cantidad:</label>
+                                                                    <input type="number" class="form-control" id="cantidad{{ carrito.id }}" name="cantidad" value="{{ carrito.cantidad }}" required>
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary">
+                                                                    <i class="fas fa-save"></i> Cambiar cantidad
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="product-image">
+                                            <img src="{{ asset('uploads/files/' ~ carrito.productos.photo) }}" alt="{{ carrito.productos.nombre }}">
+                                        </td>
+                                        <td class="product-name">{{ carrito.productos.nombre }}</td>
+                                        <td class="product-price">${{ carrito.productos.precio }}</td>
+                                        <td class="product-quantity">{{ carrito.cantidad }}</td>
+                                        <td class="product-subtotal">${{ carrito.productos.precio * carrito.cantidad }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="total-section bg-white p-4 rounded shadow-sm">
+                    <table class="total-table table table-bordered table-hover">
+                        <thead class="thead-light">
+                            <tr class="table-total-row">
+                                <th>Productos</th>
+                                <th>Precios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set total = 0 %}
+                            {% for carrito in carritos %}
+                                {% if carrito.user.id == app.user.id %}
+                                    <tr class="table-body-row" data-product-id="{{ carrito.id }}">
+                                        <td class="product-name">{{ carrito.productos.nombre }}</td>
+                                        <td class="product-subtotal text-right">${{ carrito.productos.precio * carrito.cantidad }}</td>
+                                        {% set total = total + (carrito.productos.precio * carrito.cantidad) %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            <tr class="total-data">
+                                <td class="text-right font-weight-bold"><strong>Total: </strong></td>
+                                <td id="cart-subtotal" class="text-right font-weight-bold">${{ total }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="cart-buttons">
+                        <form action="{{ path('app_cart_checkout') }}" method="POST">
+                            <input type="hidden" name="cart_items" value="{{ carritos|json_encode }}">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-shopping-cart"></i> Comprar ahora
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    $('#cantidadeditar').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var cantidad = button.data('cantidad');
+
+        var modal = $(this);
+        var form = modal.find('#cantidadFormEdit');
+        form.attr('action', '{{ path("app_cart_update", {"id": "ID_REPLACE"}) }}'.replace('ID_REPLACE', id));
+        modal.find('#carritoId').val(id);
+        modal.find('#cantidad').val(cantidad);
+    });
+</script>
+
+{% endblock %}

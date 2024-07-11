@@ -1,0 +1,186 @@
+{% extends 'base_index.html.twig' %}
+
+{% block title %} {{ parent() }} - Inicio{% endblock %}
+
+{% block body %}
+	{{parent()}}
+
+    <section class="mt-150">
+    <!-- SECCION PARA DEJAR UN ESPACIO -->
+    </section>
+
+<!-- EMPIEZA SECCION DEL VIDEO Y QUIENES SOMOS-->
+<section id="about-us" style="background: #f8f9fa; padding: 50px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="block">
+                    <img class="wow fadeInUp resize-image" data-wow-duration="300ms" data-wow-delay="400ms" src="assets/img/logopan.png" alt="Logo Panadería La Loma" style="height: 200px; width: 200px; margin-bottom: 20px;">
+
+                    <div class="heading-section">
+                        <h2 class="heading wow fadeInUp" data-wow-duration="400ms" data-wow-delay="500ms" style="font-size: 2.5em; color: #333;">
+                            Nuestra <span style="color: #e74c3c;">Historia</span>
+                        </h2>
+                    </div>
+
+                    <div class="bienvenida wow fadeInUp" data-wow-duration="300ms" data-wow-delay="600ms" style="text-align: left; margin-top: 30px;">
+                        <h3 class="text-center" style="color: #333; font-size: 2em; margin-bottom: 20px;">¡Bienvenidos a Panadería La Loma!</h3>
+                        <p style="font-size: 1.1em; line-height: 1.8em; color: #555;">
+                            En el corazón de la encantadora ciudad de Cosamaloapan de Carpio, donde el río Papaloapan serpentea serenamente y los campos verdes se extienden hasta donde alcanza la vista, nace una historia de tradición, sabor y comunidad. Panadería La Loma abrió sus puertas hace más de 20 años con una simple pero poderosa misión: traer a cada hogar de Cosamaloapan el auténtico sabor del pan artesanal, horneado con amor y dedicación. Nuestra historia comenzó con Doña María, una apasionada panadera que heredó de su abuela las recetas secretas que hoy siguen deleitando a nuestros vecinos.
+                        </p>
+                        <p style="font-size: 1.1em; line-height: 1.8em; color: #555;">
+                            Cada mañana, antes del amanecer, el equipo de La Loma se reúne para amasar y hornear el pan fresco del día. Desde el crujiente bolillo hasta el dulce concha, nuestros productos están hechos con los ingredientes más frescos y de la más alta calidad, muchos de ellos provenientes de productores locales. Creemos en el valor de lo casero y en la magia que se crea cuando se hornea con el corazón.
+                        </p>
+                    </div>
+                </div>
+            </div><!-- .col-md-12 close -->
+        </div><!-- .row close -->
+    </div><!-- .container close -->
+</section><!-- #about-us close -->
+<!-- TERMINA SECCION DEL VIDEO Y QUIENES SOMOS-->
+
+<!-- CSS adicional -->
+<style>
+#about-us {
+    background: linear-gradient(135deg, #f2f2f2 0%, #ffffff 100%);
+    padding: 60px 0;
+    border-top: 5px solid #e74c3c;
+    border-bottom: 5px solid #e74c3c;
+}
+
+.block {
+    margin: 0 auto;
+    max-width: 800px;
+    text-align: center;
+}
+
+.heading-section .heading {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.heading-section .heading span {
+    color: #e74c3c;
+}
+
+.bienvenida h3 {
+    font-family: 'Lora', serif;
+    font-weight: 600;
+    color: #333;
+}
+
+.bienvenida p {
+    font-family: 'Open Sans', sans-serif;
+    color: #555;
+    text-align: justify;
+}
+</style>
+
+<!-- JS para WOW.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+<script>
+    new WOW().init();
+</script>
+
+
+
+
+<!-- EMPIEZA DE PAGINADOR -->
+<div class="product-section mt-5 mb-100" style="background-color: #f8f9fa; padding: 50px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="section-title">
+                    <h3 style="font-size: 2.5em; color: #333;">Nuestros <span class="orange-text" style="color: #e67e22;">Panes</span> y <span class="orange-text" style="color: #e67e22;">Pasteles</span></h3>
+                </div>
+            </div>
+        </div>
+        <!-- Mostrar productos paginados -->
+        <div class="row product-lists">
+            {% for producto in productos %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card product-card" style="border: none; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.2s;">
+                    <div class="product-image" style="overflow: hidden; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                        <img src="{{ asset('uploads/files/' ~ producto.photo) }}" alt="{{ producto.nombre }}" style="width: 100%; height: 250px; object-fit: cover; transition: transform 0.5s;">
+                    </div>
+                    <div class="card-body text-center" style="background-color: #fff; padding: 20px;">
+                        <span class="product-category" style="display: block; font-size: 0.9em; color: #999; margin-bottom: 10px;">Categoría: {{ producto.categorias.categoria }}</span>
+                        <h3 class="card-title" style="font-size: 1.5em; color: #333; margin-bottom: 10px;">{{ producto.nombre }}</h3>
+                        <p class="card-text product-description" style="color: #777; margin-bottom: 15px;">{{ producto.descripcion }}</p>
+                        <p class="card-text product-price" style="font-size: 1.2em; color: #e67e22; margin-bottom: 15px;">${{ producto.precio }}</p>
+                        <!-- Añadir al carrito -->
+                        <a href="#" class="btn btn-primary add-to-cart" data-product-id="{{ producto.id }}" data-cantidad="1" style="background-color: #e67e22; border: none; padding: 10px 20px; font-size: 1em; border-radius: 50px; transition: background-color 0.3s;">
+                            <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                        </a>
+                    </div>
+                    <!-- Formulario oculto -->
+                    <form id="add-to-cart-form" method="POST" action="{{ path('app_cart_add') }}" style="display: none;">
+                        <input type="hidden" name="producto_id" id="add-to-cart-product-id">
+                        <input type="hidden" name="cantidad" id="add-to-cart-cantidad">
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- FIN DE PAGINADOR -->
+
+<!-- CSS adicional -->
+<style>
+.product-card:hover {
+    transform: translateY(-10px);
+}
+
+.product-image img:hover {
+    transform: scale(1.1);
+}
+
+.section-title h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.product-category {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.card-title {
+    font-family: 'Lora', serif;
+}
+
+.product-description, .product-price {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.add-to-cart:hover {
+    background-color: #d35400;
+}
+</style>
+
+<!-- JS para manejar el formulario de agregar al carrito -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.add-to-cart').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            var productId = this.dataset.productId;
+            var cantidad = this.dataset.cantidad;
+
+            var form = document.getElementById('add-to-cart-form');
+            document.getElementById('add-to-cart-product-id').value = productId;
+            document.getElementById('add-to-cart-cantidad').value = cantidad;
+            form.submit();
+        });
+    });
+});
+</script>
+
+
+
+
+
+	
+
+{% endblock %}

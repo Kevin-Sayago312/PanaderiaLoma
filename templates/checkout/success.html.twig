@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Pedido Completado {% endblock %}
+
+{% block body %}
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pedido Completado</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+            .checkout-section {
+                padding: 100px 0;
+            }
+            .card {
+                margin-top: 30px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="checkout-section mt-150 mb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2 text-center">
+                        {% if paymentStatus %}
+                            <div class="alert alert-success" role="alert">
+                                <h4 class="alert-heading">¡Gracias por tu compra!</h4>
+                                <p>Tu pedido ha sido completado con éxito.</p>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger" role="alert">
+                                <h4 class="alert-heading">¡Ups! Algo salió mal.</h4>
+                                <p>No pudimos procesar tu pago. Tu pedido está pendiente.</p>
+                            </div>
+                        {% endif %}
+                        {% if pedidos is defined %}
+                            {% for pedido in pedidos %}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-text"><strong>Pedido ID:</strong> {{ pedido.id }}</p>
+                                        <p class="card-text"><strong>Total:</strong> ${{ pedido.total }}</p>
+                                        <p class="card-text"><strong>Estado del Pago:</strong> {{ pedido.estatusPago }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <a href="{{ path('app_index') }}" class="btn btn-primary">Volver a la tienda</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+    </html>
+{% endblock %}

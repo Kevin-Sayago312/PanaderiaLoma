@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{parent()}} - Descripción del pan o pastel {% endblock %}
+
+{% block body %}
+	{{parent()}}
+
+	<!-- EMPIEZA SECCION DE PRODUCTO -->
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 offset-md-3 text-center">
+					<div class="single-product-item">
+						{% for producto in productos %}
+
+        <div class="product-image">
+            <a href="{{ path('app_producto') }}">
+                <img src="{{ asset('uploads/files/' ~ producto.photo) }}" alt="{{ producto.nombre }}">
+            </a>
+        </div>
+        <h3>{{ producto.nombre }}</h3>
+        <p class="product-price"><span>{{ producto.descripcion }}</span> ${{ producto.precio }}</p>
+        <!-- Añadir al carrito -->
+        <a href="#" class="cart-btn add-to-cart" data-product-id="{{ producto.id }}" data-cantidad="1">
+            <i class="fas fa-shopping-cart"></i> Añadir al carrito
+        </a>
+
+        <!-- Formulario oculto -->
+        <form id="add-to-cart-form" method="POST" action="{{ path('app_cart_add') }}" style="display: none;">
+            <input type="hidden" name="producto_id" id="add-to-cart-product-id">
+            <input type="hidden" name="cantidad" id="add-to-cart-cantidad">
+        </form>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.add-to-cart').forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var productId = this.dataset.productId;
+                    var cantidad = this.dataset.cantidad;
+
+                    var form = document.getElementById('add-to-cart-form');
+                    document.getElementById('add-to-cart-product-id').value = productId;
+                    document.getElementById('add-to-cart-cantidad').value = cantidad;
+
+                    form.submit();
+                });
+            });
+        });
+        </script>
+
+{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+	<!-- TERMINA SECCION DE PRODUCTO -->
+	
+{% endblock %}

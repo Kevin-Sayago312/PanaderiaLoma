@@ -1,0 +1,144 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} {{ parent() }} - Administrador {% endblock %}
+
+{% block body %}
+{{ parent() }}
+
+
+<div class="col-lg-10 mx-auto text-center mb-5 mt-150">
+    <div class="container mt-4">
+        <div id="productos" class="mt-4">
+            <div class="table-responsive text-center bg-white p-4 rounded shadow-sm">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="text-dark">Administración de Categorías</h2>
+                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#productoModal">
+                                <i class="fas fa-plus-circle"></i> Agregar Categoría
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th style="background-color: #f7f7f7; color: black;">ID</th>
+<th style="background-color: #f0f0f0; color: black;">Categoría</th>
+<th style="background-color: #f7f7f7; color: black;">Acciones</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for categoria in categorias %}
+                            <tr>
+                                <td>{{ categoria.id }}</td>
+                                <td>{{ categoria.categoria }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <form method="post" action="{{ path('app_categoria_delete', {'id': categoria.id}) }}" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta categoría?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ categoria.id) }}">
+                                            <button class="btn btn-danger btn-sm mr-2">
+                                                <i class="fas fa-trash-alt"></i> Eliminar
+                                            </button>
+                                        </form>
+                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#productoeditar" data-id="{{ categoria.id }}" data-nombre="{{ categoria.categoria }}">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center">No se encontraron categorías</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row mt-4">
+                    <div class="col">
+                        <a href="{{ path('app_admin') }}" class="btn btn-light btn-sm float-left">
+                            <i class="fas fa-arrow-left"></i> Regresar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar categoría -->
+<div class="modal fade" id="productoModal" tabindex="-1" role="dialog" aria-labelledby="productoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productoModalLabel">Agregar Nueva Categoría</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario -->
+                <form id="productoForm" action="{{ path('registrar_categoria') }}" method="post">
+                    <div class="form-group">
+                        <label for="categoria">Nombre:</label>
+                        <input type="text" class="form-control" id="categoria" name="categoria" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar categoría -->
+<div class="modal fade" id="productoeditar" tabindex="-1" role="dialog" aria-labelledby="productoeditarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productoeditarLabel">Editar Categoría</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario -->
+                <form id="productoFormEdit" method="post">
+                    <input type="hidden" id="categoriaId" name="id">
+                    <div class="form-group">
+                        <label for="categoria">Nombre:</label>
+                        <input type="text" class="form-control" id="categoria" name="categoria" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Editar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Incluir la CDN de Font Awesome para los íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#productoeditar').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var nombre = button.data('nombre'); // Obtener el valor del nombre de la categoría del botón
+
+            var modal = $(this);
+            var form = modal.find('#productoFormEdit');
+            form.attr('action', '{{ path("app_categoria_edit", {"id": "ID_REPLACE"}) }}'.replace('ID_REPLACE', id));
+            modal.find('#categoriaId').val(id);
+            modal.find('#categoria').val(nombre); // Establecer el valor del campo de entrada con el nombre de la categoría
+        });
+    </script>
+{% endblock %}

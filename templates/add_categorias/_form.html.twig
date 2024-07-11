@@ -1,0 +1,65 @@
+{# templates/producto/_form.html.twig #}
+
+{% extends 'index_base.html.twig' %}
+
+{% block title %} Informacion Personal {% endblock %}
+
+{% block body %}
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Tu perfil</p>
+                    <h1>Toda tu información personal</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end breadcrumb section -->
+
+{% if app.user %}
+    <!-- EMPIEZA APARTADO DE INFORMACION PERSONAL -->
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card bg-secondary">
+                    <div class="card-header">
+                        <h2 class="text-center">Información Personal</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" name="nombre" class="form-control" value="{{ app.user.nombre }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo electrónico:</label>
+                            <input type="email" id="email" name="email" class="form-control" value="{{ app.user.email }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Contraseña:</label>
+                            <input type="password" id="password" name="password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="photo">Foto de perfil:</label>
+                            <input type="file" id="photo" name="photo" class="form-control-file">
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-block">Guardar cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- TERMINA APARTADO DE INFORMACION PERSONAL -->
+{% else %}
+    <div class="container mt-5 mb-5">
+        <div class="alert alert-danger">
+            Debes iniciar sesión para ver esta página.
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

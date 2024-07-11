@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} - Domicilio y pago {% endblock %}
+
+{% block body %}
+    {{ parent() }}
+
+   <!-- Estilos CSS para la sección de checkout -->
+<style>
+    /* Estilos generales */
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .checkout-section {
+        background: linear-gradient(to bottom, #f9f9f9, #eaeaea);
+        padding: 50px 0;
+        min-height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .order-details-wrap {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px; /* Ajusta el ancho máximo según tu diseño */
+    }
+
+    .order-details-wrap .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-details-wrap .card-header {
+        background-color: #4CAF50;
+        color: #fff;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .order-details-wrap .card-body {
+        padding: 20px;
+    }
+
+    .order-details-body tr {
+        border-bottom: 1px solid #eee;
+    }
+
+    .order-details-body th,
+    .order-details-body td {
+        padding: 10px 15px;
+        vertical-align: middle !important;
+    }
+
+    .order-details-body .total-data {
+        border-top: 2px solid #4CAF50;
+    }
+
+    .order-details-body .font-weight-bold {
+        font-size: 18px;
+    }
+
+    #paypal-button-container {
+        text-align: center;
+    }
+</style>
+
+<!-- Contenido HTML de la sección de checkout -->
+<div class="checkout-section mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="order-details-wrap">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">Detalles del Carrito</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered order-details-body">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th class="text-right">Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set total = 0 %}
+                                    {% for carrito in carritos %}
+                                        {% if carrito.user.id == app.user.id %}
+                                            <tr class="table-body-row" data-product-id="{{ carrito.id }}">
+                                                <td>{{ carrito.productos.nombre }}</td>
+                                                <td class="text-right">${{ carrito.subtotal }}</td>
+                                            </tr>
+                                            {% set total = total + carrito.subtotal %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <tr class="total-data">
+                                        <td class="text-right font-weight-bold">Total:</td>
+                                        <td class="text-right font-weight-bold">${{ total }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="paypal-button-container" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end checkout section -->
+
+
+    <script src="https://www.paypal.com/sdk/js?client-id=Ac_wvUWxMcZVqZTIP5RCB4ka_0PpbNteGVra5vGC2NereWNW82fFXtFdnHTB7YNGvE9tLfvjuf5sZoky&currency=MXN"></script>
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '{{ total }}'
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Redirect to your success page
+                    window.location.href = "{{ path('paypal_success') }}?orderID=" + data.orderID;
+                });
+            }
+        }).render('#paypal-button-container');
+    </script>
+{% endblock %}
